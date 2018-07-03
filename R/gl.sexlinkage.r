@@ -1,3 +1,5 @@
+#' @rdname sexlinkage
+#' 
 #' Identify loci that are sex linked in specimens in a genlight \{adegenet\} object
 #'
 #' Alleles unique to the Y or W chromosome and monomorphic on the X chromosomes will appear in the SNP dataset as 
@@ -16,6 +18,8 @@
 #' be regarded as consistent with a sex specific marker [default 0]
 #' @param verbose -- verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)
 #' @param na.rm -- logical: should NAs in sex assignments be ignored?
+#' @param x
+#' @param object
 #' @return The list of sex specific loci
 #' @export
 #' @author Arthur Georges (glbugs@aerg.canberra.edu.au)
@@ -197,7 +201,12 @@ gl.sexlinkage <- function(x, t.het = 0, t.hom = 0, verbose = FALSE, na.rm = FALS
     
   }
   
-  out <- list(zw, xy, zl, wl, xl, yl)
+  out <- list(zw = zw,
+              xy = xy,
+              zlinked = zl,
+              wlinked = wl,
+              xlinked = xl,
+              ylinked = yl)
   
   class(out) <- 'sexlinkage'
   
@@ -205,14 +214,69 @@ gl.sexlinkage <- function(x, t.het = 0, t.hom = 0, verbose = FALSE, na.rm = FALS
   
 }
 
-print.sexlinkage <- function(x, ...) {
-  
-  UseMethod(print, x)
-  
+
+#' @rdname sexlinkage
+#'
+#' @export
+#' 
+#' @examples
+#'
+#' # check if an object is a sexlinkage object
+#'   
+#' \dontrun{
+#' is.sexlinkage(object)
+#' }
+
+is.sexlinkage <- function (object) {
+  inherits(object, 'sexlinkage')
 }
- 
-print.sexlinkage.default <- function(x) {
+
+#' @rdname sexlinkage
+#'
+#' @export
+#'
+#' @examples
+#' 
+#' # Print information about a 'sexlinkage' object
+#'
+#' \dontrun{
+#' print(object)
+#' }
+
+print.sexlinkage <- function (x, ...) {
+  cat(paste0('This is a sexlinkage object\n'))
+}
+
+#' @rdname sexlinkage
+#'
+#' @export
+#'
+#' @examples
+#' 
+#' # Summarise a 'sexlinkage' object
+#'
+#' \dontrun{
+#' summary(object)
+#' }
+
+summary.sexlinkage <- function (object, ...) {
   
   NULL
+  
+}
+
+# internal function: create sexlinkage object
+as.sexlinkage <- function (object) {
+  as_class(object, name = 'sexlinkage', type = 'list')
+}
+
+# set an object class
+as_class <- function (object, name, type = c("function", "list")) {
+  
+  type <- match.arg(type)
+  stopifnot(inherits(object, type))
+  class(object) <- c(name, class(object))
+  
+  object
   
 }
