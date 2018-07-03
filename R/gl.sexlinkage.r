@@ -14,7 +14,7 @@
 #' be regarded as consistent with a sex specific marker [default 0]
 #' @param t.hom -- tolerance, that is t.hom = 0.05 means that 5% of the heterogametic sex can be homozygous and still
 #' be regarded as consistent with a sex specific marker [default 0]
-#' @param v -- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]
+#' @param verbose -- verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)
 #' @param na.rm -- logical: should NAs in sex assignments be ignored?
 #' @return The list of sex specific loci
 #' @export
@@ -22,14 +22,14 @@
 #' @examples
 #' result <- gl.sexlinkage(testset.gl)
 
-gl.sexlinkage <- function(x, t.het = 0, t.hom = 0, v = 2, na.rm = FALSE) {
+gl.sexlinkage <- function(x, t.het = 0, t.hom = 0, verbose = FALSE, na.rm = FALSE) {
 
   # remove NAs from data set
   if (na.rm & any(is.na(x@other$ind.metrics$sex))) {
     x <- x[!is.na(x@other$ind.metrics$sex)]
   }
   
-  if (v > 0) {
+  if (verbose) {
     cat("Starting gl.sexlinkage: Identifying sex linked loci\n")
   }
   
@@ -100,100 +100,119 @@ gl.sexlinkage <- function(x, t.het = 0, t.hom = 0, v = 2, na.rm = FALSE) {
   xy <- df[(df$F1 / (sumf[(sumf > 0) & (summ > 0)])) <= (0 + t.het) &
              (df$M1 / (summ[(sumf > 0) & (summ > 0)])) >= (1 - t.hom), ]
 
-  # Z-linked/only on Z (only homs in females, hets or homs in males)
-  zl <- df[(df$F1 / sumf[(sumf > 0) & (summ > 0)]) <= (0 + t.het), ]
+  # Z-linked/only on Z (only homs in females, hets in males)
+  zl <- df[(df$F1 / sumf[(sumf > 0) & (summ > 0)]) <= (0 + t.het) &
+             (df$M1 / (summ[(sumf > 0) & (summ > 0)])) >= (1 - t.hom), ]
   
   # W-linked/only on W (only homs in females, absent in males)
   wl <- df_zero_sum[(df_zero_sum$F1 / sumf[(sumf == 0) | (summ == 0)]) <= (0 + t.het) &
                       summ[(sumf == 0) | (summ == 0)] == 0, ]
   
-  # X-linked/only on X (hets or homs in females, only homs in males)
-  xl <- df[(df$M1 / summ[(sumf > 0) & (summ > 0)]) <= (0 + t.het), ]
+  # X-linked/only on X (hets in females, only homs in males)
+  xl <- df[(df$M1 / summ[(sumf > 0) & (summ > 0)]) <= (0 + t.het) &
+             (df$F1 / sumf[(sumf > 0) & (summ > 0)]) >= (1 - t.hom), ]
   
   # Y-linked/only on Y (absent in females, only homs in males)
   yl <- df_zero_sum[(df_zero_sum$M1 / summ[(sumf == 0) | (summ == 0)]) <= (0 + t.het) &
                       sumf[(sumf == 0) | (summ == 0)] == 0, ]
   
-  # Locus present on both Z and W that differentiates males and females
-  #   (only hets in females, only homs in males)
-  if (nrow(zw) == 0) {
-    cat("No loci present on Z and W that differentiate males and females (ZZ/ZW)\n")
-  } else {
-    cat("\nFound loci on Z and W that differentiate males and females (ZZ/ZW)\n")
-    cat(paste("  Threshold proportion for homozygotes in the heterozygotic sex (ZW)", t.hom, ";\n")) 
-    cat(paste("  for heterozygotes in the homozygotic sex (ZZ)", t.het, "\n"))
-    cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
-    print(zw)
-    cat("Note: SNP location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
-    cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
-  }
-
-  # Locus present on both X and Y that differentiates males and females
-  #    (only homs in females, only hets in males)
-  if (nrow(xy) == 0) {
-    cat("No loci present on X and Y that differentiate males and females (XX/XY)\n")
-  } else {
-    cat("\nFound loci on X and Y that differentiate males and females (XX/XY)\n")
-    cat(paste("  Threshold proportion for homozygotes in the heterozygotic sex (XY)",t.hom,";\n")) 
-    cat(paste("  for heterozygotes in the homozygotic sex (XX)",t.het,"\n"))
-    cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
-    print(xy)
-    cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
-    cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
-  }
-  
-  # Z-linked/only on Z (only homs in females, hets or homs in males)
-  if (nrow(zl) == 0) {
-    cat("No loci present that are Z-linked or found only on Z")
-  } else {
-    cat("\nFound loci that are Z-linked or found only on Z\n")
-    cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (W)", t.het, ";\n")) 
-    cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
-    print(zl)
-    cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
-    cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
-  }
-  
-  # W-linked/only on W (only homs in females, absent in males)
-  if (nrow(wl) == 0) {
-    cat("No loci present that are W-linked or found only on W")
-  } else {
-    cat("\nFound loci that are W-linked or found only on W\n")
-    cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (W)", t.het, ";\n")) 
-    cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
-    print(wl)
-    cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
-    cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
-  }
-  
-  # X-linked/only on X (hets or homs in females, only homs in males)
-  if (nrow(xl) == 0) {
-    cat("No loci present that are X-linked or found only on X")
-  } else {
-    cat("\nFound loci that are X-linked or found only on X\n")
-    cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (Y)", t.het, ";\n")) 
-    cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
-    print(xl)
-    cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
-    cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
-  }
-  
-  # Y-linked/only on Y (absent in females, only homs in males)
-  yl <- df_zero_sum[(df_zero_sum$M1 / summ[(sumf == 0) | (summ == 0)]) <= (0 + t.het) &
-                      sumf[(sumf == 0) | (summ == 0)] == 0, ]
-  if (nrow(yl) == 0) {
-    cat("No loci present that are Y-linked or found only on Y")
-  } else {
-    cat("\nFound loci that are Y-linked or found only on Y\n")
-    cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (Y)", t.het, ";\n")) 
-    cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
-    print(yl)
-    cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
-    cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+  # print only if verbose
+  if (verbose) {
+    
+    # Locus present on both Z and W that differentiates males and females
+    #   (only hets in females, only homs in males)
+    if (nrow(zw) == 0) {
+      cat("No loci present on Z and W that differentiate males and females (ZZ/ZW)\n")
+    } else {
+      cat("\nFound loci on Z and W that differentiate males and females (ZZ/ZW)\n")
+      cat(paste("  Threshold proportion for homozygotes in the heterozygotic sex (ZW)", t.hom, ";\n")) 
+      cat(paste("  for heterozygotes in the homozygotic sex (ZZ)", t.het, "\n"))
+      cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
+      print(zw)
+      cat("Note: SNP location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
+      cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+    }
+    
+    # Locus present on both X and Y that differentiates males and females
+    #    (only homs in females, only hets in males)
+    if (nrow(xy) == 0) {
+      cat("No loci present on X and Y that differentiate males and females (XX/XY)\n")
+    } else {
+      cat("\nFound loci on X and Y that differentiate males and females (XX/XY)\n")
+      cat(paste("  Threshold proportion for homozygotes in the heterozygotic sex (XY)",t.hom,";\n")) 
+      cat(paste("  for heterozygotes in the homozygotic sex (XX)",t.het,"\n"))
+      cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
+      print(xy)
+      cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
+      cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+    }
+    
+    # Z-linked/only on Z (only homs in females, hets in males)
+    if (nrow(zl) == 0) {
+      cat("No loci present that are Z-linked or found only on Z")
+    } else {
+      cat("\nFound loci that are Z-linked or found only on Z\n")
+      cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (W)", t.het, ";\n")) 
+      cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
+      print(zl)
+      cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
+      cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+    }
+    
+    # W-linked/only on W (only homs in females, absent in males)
+    if (nrow(wl) == 0) {
+      cat("No loci present that are W-linked or found only on W")
+    } else {
+      cat("\nFound loci that are W-linked or found only on W\n")
+      cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (W)", t.het, ";\n")) 
+      cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
+      print(wl)
+      cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
+      cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+    }
+    
+    # X-linked/only on X (hets in females, only homs in males)
+    if (nrow(xl) == 0) {
+      cat("No loci present that are X-linked or found only on X")
+    } else {
+      cat("\nFound loci that are X-linked or found only on X\n")
+      cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (Y)", t.het, ";\n")) 
+      cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
+      print(xl)
+      cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
+      cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+    }
+    
+    # Y-linked/only on Y (absent in females, only homs in males)
+    if (nrow(yl) == 0) {
+      cat("No loci present that are Y-linked or found only on Y")
+    } else {
+      cat("\nFound loci that are Y-linked or found only on Y\n")
+      cat(paste("  Threshold proportion for heterozygotes in the homozygotic sex (Y)", t.het, ";\n")) 
+      cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
+      print(yl)
+      cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
+      cat("Note: The most reliable putative markers will have AvgCount for Ref or Snp 10 or more, one ca half the other\n")
+    }
+    
   }
   
   out <- list(zw, xy, zl, wl, xl, yl)
   
+  class(out) <- 'sexlinkage'
+  
   out
+  
+}
+
+print.sexlinkage <- function(x, ...) {
+  
+  UseMethod(print, x)
+  
+}
+ 
+print.sexlinkage.default <- function(x) {
+  
+  NULL
   
 }
