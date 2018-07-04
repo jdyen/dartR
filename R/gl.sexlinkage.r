@@ -13,11 +13,13 @@
 #' Sex of the individuals for which sex is known with certainty is to be held in the variable x@other$ind.metrics$sex, 
 #' as M for male, F for female, NA otherwise. The script abbreviates the entries here to the first character. So coding of "Female" and "Male" works as well. Character are also converted to upper cases.
 #'
-#' @param x -- name of the genlight object containing the SNP data [required]
-#' @param t.het -- tolerance, that is t.het = 0.05 means that 5% of the homogametic sex can be heterozygous and still 
-#' be regarded as consistent with a sex specific marker [default 0]
-#' @param t.hom -- tolerance, that is t.hom = 0.05 means that 5% of the heterogametic sex can be homozygous and still
-#' be regarded as consistent with a sex specific marker [default 0]
+#' @param x -- name of the genlight object containing the SNP data
+#' @param t.het -- tolerance, that is \code{t.het = 0.05} means that 5% of the homogametic sex can be heterozygous and still 
+#'   be regarded as consistent with a sex specific marker (default 0)
+#' @param t.hom -- tolerance, that is \code{t.hom = 0.05} means that 5% of the heterogametic sex can be homozygous and still
+#'   be regarded as consistent with a sex specific marker (default 0)
+#' @param t.abs -- tolerance to errors when identifying absent individuals. \code{t.abs = 1} treats a single observation for
+#'   a given sex as an absence
 #' @param verbose -- verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)
 #' @param na.rm -- logical: should NAs in sex assignments be ignored?
 #' @param x -- a sexlinkage object created with \code{gl.sexlinkage}
@@ -35,7 +37,7 @@
 #' result <- gl.sexlinkage(testset.gl)
 
 gl.sexlinkage <- function(x,
-                          t.het = 0, t.hom = 0,
+                          t.het = 0, t.hom = 0, t.abs = 0,
                           verbose = FALSE,
                           na.rm = FALSE) {
 
@@ -100,26 +102,26 @@ gl.sexlinkage <- function(x,
   # Check for hets in all males, homs in all females (XY); ditto for ZW
   sumf <- df$F0 + df$F1 + df$F2
   summ <- df$M0 + df$M1 + df$M2
-  df_zero_sum <- df[(sumf == 0) | (summ == 0), ]
-  df <- df[(sumf > 0) & (summ > 0), ]
+  df_zero_sum <- df[(sumf <= t.abs) | (summ <= t.abs), ]
+  df <- df[(sumf > t.abs) & (summ > t.abs), ]
 
   # Locus present on both Z and W that differentiates males and females
   #   (only hets in females, only homs in males)
-  zw <- df[(df$F1 / (sumf[(sumf > 0) & (summ > 0)])) >= (1 - t.hom) &
-             (df$M1 / (summ[(sumf > 0) & (summ > 0)])) <= (0 + t.het), ]
+  zw <- df[(df$F1 / (sumf[(sumf > t.abs) & (summ > t.abs)])) >= (1 - t.hom) &
+             (df$M1 / (summ[(sumf > t.abs) & (summ > t.abs)])) <= (0 + t.het), ]
   
   # Locus present on both X and Y that differentiates males and females
   #    (only homs in females, only hets in males)
-  xy <- df[(df$F1 / (sumf[(sumf > 0) & (summ > 0)])) <= (0 + t.het) &
-             (df$M1 / (summ[(sumf > 0) & (summ > 0)])) >= (1 - t.hom), ]
+  xy <- df[(df$F1 / (sumf[(sumf > t.abs) & (summ > t.abs)])) <= (0 + t.het) &
+             (df$M1 / (summ[(sumf > t.abs) & (summ > t.abs)])) >= (1 - t.hom), ]
 
   # W-linked/only on W (only homs in females, absent in males)
-  wl <- df_zero_sum[(df_zero_sum$F1 / sumf[(sumf == 0) | (summ == 0)]) <= (0 + t.het) &
-                      summ[(sumf == 0) | (summ == 0)] == 0, ]
+  wl <- df_zero_sum[(df_zero_sum$F1 / sumf[(sumf <= t.abs) | (summ <= t.abs)]) <= (0 + t.het) &
+                      summ[(sumf <= t.abs) | (summ <= t.abs)] == 0, ]
   
   # Y-linked/only on Y (absent in females, only homs in males)
-  yl <- df_zero_sum[(df_zero_sum$M1 / summ[(sumf == 0) | (summ == 0)]) <= (0 + t.het) &
-                      sumf[(sumf == 0) | (summ == 0)] == 0, ]
+  yl <- df_zero_sum[(df_zero_sum$M1 / summ[(sumf <= t.abs) | (summ <= t.abs)]) <= (0 + t.het) &
+                      sumf[(sumf <= t.abs) | (summ <= t.abs)] == 0, ]
   
   # print only if verbose
   if (verbose) {
