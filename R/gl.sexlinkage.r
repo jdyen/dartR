@@ -225,7 +225,7 @@ print.sexlinkage <- function (x, ..., system = NULL) {
                 nrow(x$fem_absent_male_hom))
   
   if (any(num_loci) > 0) {
-    if (is.null(system) | !(system %in% c('xy', 'zw'))) {
+    if (is.null(system)) {
       if (nrow(x$fem_het_male_hom)) {    
         cat(paste0('Identified ', nrow(x$fem_het_male_hom),
                    ' loci with evidence of heterogametic something',
@@ -235,19 +235,21 @@ print.sexlinkage <- function (x, ..., system = NULL) {
         cat(paste0('Identified ', nrow(x$fem_hom_male_het),
                    ' loci with evidence of male hemizygosity',
                    '\n'))
-      }
+      } 
       if (nrow(x$fem_hom_male_absent)) {    
         cat(paste0('Identified ', nrow(x$fem_hom_male_absent),
                    ' loci with evidence of male hemizygosity',
                    '\n'))
-      }
+      } 
       if (nrow(x$fem_absent_male_hom)) {    
         cat(paste0('Identified ', nrow(x$fem_absent_male_hom),
                    ' loci with evidence of male hemizygosity',
                    '\n'))
       }
-    }
-    if (system %in% c('xy', 'zw')) {
+    } else { 
+      if(!(system %in% c('xy', 'zw')) {
+        stop('system must be one of xy, zw, or NULL', call. = FALSE)
+      }
       if (system == 'xy') { 
         if (nrow(x$fem_het_male_hom)) {    
           cat(paste0('Identified ', nrow(x$fem_het_male_hom),
@@ -293,9 +295,9 @@ print.sexlinkage <- function (x, ..., system = NULL) {
         }
       }
     }
-  } else {
+  } else { 
     cat(paste0('No sex-linked loci were identified\n'))
-  } 
+  }  
 }
 
 #' @rdname sexlinkage
@@ -319,7 +321,7 @@ summary.sexlinkage <- function (object, ..., system = NULL) {
                 nrow(object$fem_absent_male_hom))
   
   if (any(num_loci) > 0) {
-    if (is.null(system) | !(system %in% c('xy', 'zw'))) {
+    if (is.null(system)) {
       if (nrow(object$fem_het_male_hom)) {    
         cat(paste0('Identified ', nrow(object$fem_het_male_hom),
                    ' loci with evidence of heterogametic something',
@@ -344,8 +346,10 @@ summary.sexlinkage <- function (object, ..., system = NULL) {
                    '\n'))
         print(object$fem_absent_male_hom)
       }
-    }
-    if (system %in% c('xy', 'zw')) {
+    } else {
+      if(!(system %in% c('xy', 'zw')) {
+        stop('system must be one of xy, zw, or NULL', call. = FALSE)
+      }
       if (system == 'xy') { 
         if (nrow(object$fem_het_male_hom)) {    
           cat(paste0('Identified ', nrow(object$fem_het_male_hom),
