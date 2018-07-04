@@ -14,10 +14,10 @@
 #' as M for male, F for female, NA otherwise. The script abbreviates the entries here to the first character. So coding of "Female" and "Male" works as well. Character are also converted to upper cases.
 #'
 #' @param x -- name of the genlight object containing the SNP data
-#' @param t.het -- tolerance, that is \code{t.het = 0.05} means that 5% of the homogametic sex can be heterozygous and still 
-#'   be regarded as consistent with a sex specific marker (default 0)
-#' @param t.hom -- tolerance, that is \code{t.hom = 0.05} means that 5% of the heterogametic sex can be homozygous and still
-#'   be regarded as consistent with a sex specific marker (default 0)
+#' @param t.het -- tolerance, that is \code{t.het = 0.05} means that 5% of individuals in the sex expected to be homozygous
+#'   can be heterozygous and still be regarded as consistent with a sex specific marker (default 0)
+#' @param t.hom -- tolerance, that is \code{t.hom = 0.05} means that 5% of individuals in the sex expected to be heterozygous
+#'   can be homozygous and still be regarded as consistent with a sex specific marker (default 0)
 #' @param t.abs -- tolerance to errors when identifying absent individuals. \code{t.abs = 1} treats a single observation for
 #'   a given sex as an absence
 #' @param verbose -- verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)
@@ -132,8 +132,8 @@ gl.sexlinkage <- function(x,
       cat("No loci present on Z and W that differentiate males and females (ZZ/ZW)\n")
     } else {
       cat("\nFound loci on Z and W that differentiate males and females (ZZ/ZW)\n")
-      cat(paste("  Threshold proportion for homozygotes in the heterogametic sex (ZW)", t.hom, ";\n")) 
-      cat(paste("  for heterozygotes in the homogametic sex (ZZ)", t.het, "\n"))
+      cat(paste("  Threshold proportion for homozygotes in the sex expected to be heterozygous (ZW)", t.hom, ";\n")) 
+      cat(paste("  for heterozygotes in the the sex expected to be homozygous (ZZ)", t.het, "\n"))
       cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
       print(zw)
       cat("Note: SNP location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
@@ -146,8 +146,8 @@ gl.sexlinkage <- function(x,
       cat("No loci present on X and Y that differentiate males and females (XX/XY)\n")
     } else {
       cat("\nFound loci on X and Y that differentiate males and females (XX/XY)\n")
-      cat(paste("  Threshold proportion for homozygotes in the heterogametic sex (XY)",t.hom,";\n")) 
-      cat(paste("  for heterozygotes in the homogametic sex (XX)",t.het,"\n"))
+      cat(paste("  Threshold proportion for homozygotes in the sex expected to be heterozygous (XY)",t.hom,";\n")) 
+      cat(paste("  for heterozygotes in the sex expected to be homozygous (XX)",t.het,"\n"))
       cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
       print(xy)
       cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
@@ -159,7 +159,7 @@ gl.sexlinkage <- function(x,
       cat("No loci present that are W-linked or found only on W")
     } else {
       cat("\nFound loci that are W-linked or found only on W\n")
-      cat(paste("  Threshold proportion for heterozygotes in the homogametic sex (W)", t.het, ";\n")) 
+      cat(paste("  Threshold proportion for heterozygotes in the sex expected to be homozygous (W)", t.het, ";\n")) 
       cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
       print(wl)
       cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
@@ -171,7 +171,7 @@ gl.sexlinkage <- function(x,
       cat("No loci present that are Y-linked or found only on Y")
     } else {
       cat("\nFound loci that are Y-linked or found only on Y\n")
-      cat(paste("  Threshold proportion for heterozygotes in the homogametic sex (Y)", t.het, ";\n")) 
+      cat(paste("  Threshold proportion for heterozygotes in the sex expected to be homozygous (Y)", t.het, ";\n")) 
       cat("  0 = homozygous reference; 1 = heterozygous; 2 = homozygous alternate\n")
       print(yl)
       cat("Note: Snp location in Trimmed Sequence indexed from 0 not 1, SNP position in lower case\n")
@@ -229,8 +229,8 @@ print.sexlinkage <- function (x, ..., system = NULL) {
                 nrow(x$fem_hom_male_absent),
                 nrow(x$fem_absent_male_hom))
   
-  cat(paste("Threshold proportion for heterozygotes in the homogametic sex: ", x$thresholds$het, "\n")) 
-  cat(paste("Threshold proportion for homozygotes in the heterogametic sex: ", x$thresholds$hom, "\n")) 
+  cat(paste("Threshold proportion for heterozygotes in the sex expected to be homozygous: ", x$thresholds$het, "\n")) 
+  cat(paste("Threshold proportion for homozygotes in the sex expected to be heterozygous: ", x$thresholds$hom, "\n")) 
   
   if (any(num_loci) > 0) {
     if (is.null(system)) {
@@ -330,8 +330,8 @@ summary.sexlinkage <- function (object, ..., system = NULL,
                 nrow(object$fem_hom_male_absent),
                 nrow(object$fem_absent_male_hom))
   
-  cat(paste("Threshold proportion for heterozygotes in the homogametic sex: ", object$thresholds$het, "\n")) 
-  cat(paste("Threshold proportion for homozygotes in the heterogametic sex: ", object$thresholds$hom, "\n")) 
+  cat(paste("Threshold proportion for heterozygotes in the sex expected to be homozygous: ", object$thresholds$het, "\n")) 
+  cat(paste("Threshold proportion for homozygotes in the sex expected to be heterozygous: ", object$thresholds$hom, "\n")) 
   
   if (any(num_loci) > 0) {
     if (is.null(system)) {
