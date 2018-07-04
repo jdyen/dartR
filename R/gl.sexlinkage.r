@@ -37,7 +37,7 @@
 #' result <- gl.sexlinkage(testset.gl)
 
 gl.sexlinkage <- function(x,
-                          t.het = 0, t.hom = 0, t.abs = 0,
+                          t.het = 0, t.hom = 0.25, t.abs = 0,
                           verbose = FALSE,
                           na.rm = FALSE) {
 
