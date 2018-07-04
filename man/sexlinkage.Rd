@@ -18,28 +18,28 @@ summary.sexlinkage(object, ..., system = NULL, include = c("locus", "count",
   "sequence", "metrics"))
 }
 \arguments{
-\item{x}{-- name of the genlight object containing the SNP data}
+\item{x}{name of the genlight object containing the SNP data}
 
-\item{t.het}{-- tolerance, that is \code{t.het = 0.05} means that 5% of individuals in the sex expected to be homozygous
+\item{t.het}{tolerance, that is \code{t.het = 0.05} means that 5 percent of individuals in the sex expected to be homozygous
 can be heterozygous and still be regarded as consistent with a sex specific marker (default 0)}
 
-\item{t.hom}{-- tolerance, that is \code{t.hom = 0.05} means that 5% of individuals in the sex expected to be heterozygous
+\item{t.hom}{tolerance, that is \code{t.hom = 0.05} means that 5 percent of individuals in the sex expected to be heterozygous
 can be homozygous and still be regarded as consistent with a sex specific marker (default 0)}
 
-\item{t.abs}{-- tolerance to errors when identifying absent individuals. \code{t.abs = 1} treats a single observation for
+\item{t.abs}{tolerance to errors when identifying absent individuals. \code{t.abs = 1} treats a single observation for
 a given sex as an absence}
 
-\item{verbose}{-- verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)}
+\item{verbose}{verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)}
 
-\item{na.rm}{-- logical: should NAs in sex assignments be ignored?}
+\item{na.rm}{logical: should NAs in sex assignments be ignored?}
 
-\item{object}{-- a sexlinkage object created with \code{gl.sexlinkage}}
+\item{object}{a sexlinkage object created with \code{gl.sexlinkage}}
 
-\item{system}{-- a string indicating whether the study organism comes from a \code{'xy'} or \code{'zw'} system}
+\item{system}{a string indicating whether the study organism comes from a \code{'xy'} or \code{'zw'} system}
 
-\item{include}{-- a character vector denoting information to print in \code{summary(sexlinkage)}, any of \code{c('locus', 'count', 'sequence', 'metrics')}}
+\item{include}{a character vector denoting information to print in \code{summary(sexlinkage)}, any of \code{c('locus', 'count', 'sequence', 'metrics')}}
 
-\item{x}{-- a sexlinkage object created with \code{gl.sexlinkage}}
+\item{x}{a sexlinkage object created with \code{gl.sexlinkage}}
 }
 \value{
 The list of sex specific loci
