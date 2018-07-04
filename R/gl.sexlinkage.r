@@ -117,11 +117,11 @@ gl.sexlinkage <- function(x,
 
   # W-linked/only on W (only homs in females, absent in males)
   wl <- df_zero_sum[(df_zero_sum$F1 / sumf[(sumf <= t.abs) | (summ <= t.abs)]) <= (0 + t.het) &
-                      summ[(sumf <= t.abs) | (summ <= t.abs)] == 0, ]
+                      summ[(sumf <= t.abs) | (summ <= t.abs)] <= t.abs, ]
   
   # Y-linked/only on Y (absent in females, only homs in males)
   yl <- df_zero_sum[(df_zero_sum$M1 / summ[(sumf <= t.abs) | (summ <= t.abs)]) <= (0 + t.het) &
-                      sumf[(sumf <= t.abs) | (summ <= t.abs)] == 0, ]
+                      sumf[(sumf <= t.abs) | (summ <= t.abs)] <= t.abs, ]
   
   # print only if verbose
   if (verbose) {
