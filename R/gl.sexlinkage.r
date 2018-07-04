@@ -234,12 +234,12 @@ print.sexlinkage <- function (x, ..., system = NULL) {
     if (is.null(system)) {
       if (nrow(x$fem_het_male_hom)) {    
         cat(paste0('\nIdentified ', nrow(x$fem_het_male_hom),
-                   ' which appear as homozygotes in males and heterozygotes in females',
+                   ' loci which appear as homozygotes in males and heterozygotes in females',
                    '\n'))
       }
       if (nrow(x$fem_hom_male_het)) {    
         cat(paste0('\nIdentified ', nrow(x$fem_hom_male_het),
-                   ' which appear as homozygotes in females and heterozygotes in males',
+                   ' loci which appear as homozygotes in females and heterozygotes in males',
                    '\n'))
       }
       if (nrow(x$fem_hom_male_absent)) {    
@@ -335,13 +335,13 @@ summary.sexlinkage <- function (object, ..., system = NULL,
     if (is.null(system)) {
       if (nrow(object$fem_het_male_hom)) {    
         cat(paste0('\nIdentified ', nrow(object$fem_het_male_hom),
-                   ' which appear as homozygotes in males and heterozygotes in females',
+                   ' loci which appear as homozygotes in males and heterozygotes in females',
                    '\n'))
         sexlinkage_print_helper(object$fem_het_male_hom, include = include)
       }
       if (nrow(object$fem_hom_male_het)) {    
         cat(paste0('\nIdentified ', nrow(object$fem_hom_male_het),
-                   ' which appear as homozygotes in females and heterozygotes in males',
+                   ' loci which appear as homozygotes in females and heterozygotes in males',
                    '\n'))
         sexlinkage_print_helper(object$fem_hom_male_het, include = include)
       }
