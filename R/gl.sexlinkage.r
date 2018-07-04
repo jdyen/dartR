@@ -247,7 +247,7 @@ print.sexlinkage <- function (x, ..., system = NULL) {
                    '\n'))
       }
     } else { 
-      if(!(system %in% c('xy', 'zw')) {
+      if(!(system %in% c('xy', 'zw'))) {
         stop('system must be one of xy, zw, or NULL', call. = FALSE)
       }
       if (system == 'xy') { 
@@ -347,7 +347,7 @@ summary.sexlinkage <- function (object, ..., system = NULL) {
         print(object$fem_absent_male_hom)
       }
     } else {
-      if(!(system %in% c('xy', 'zw')) {
+      if(!(system %in% c('xy', 'zw'))) {
         stop('system must be one of xy, zw, or NULL', call. = FALSE)
       }
       if (system == 'xy') { 
