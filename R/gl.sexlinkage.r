@@ -1,7 +1,9 @@
-#' @rdname sexlinkage
+#' A sexlinkage object
 #' 
-#' Identify loci that are sex linked in specimens in a genlight \{adegenet\} object
+#' @rdname sexlinkage
 #'
+#' @description Identify loci that are sex linked in specimens in a genlight \{adegenet\} object
+#' 
 #' Alleles unique to the Y or W chromosome and monomorphic on the X chromosomes will appear in the SNP dataset as 
 #' genotypes that are heterozygotic in all individuals of the heterogametic sex and homozygous in all individuals 
 #' of the homogametic sex.
@@ -18,8 +20,8 @@
 #' be regarded as consistent with a sex specific marker [default 0]
 #' @param verbose -- verbosity: logical indicating whether outputs should be printed to the console (default: FALSE)
 #' @param na.rm -- logical: should NAs in sex assignments be ignored?
-#' @param x
-#' @param object
+#' @param x -- a sexlinkage object created with \code{gl.sexlinkage}
+#' @param object -- a sexlinkage object created with \code{gl.sexlinkage}
 #' 
 #' @return The list of sex specific loci
 #' 
@@ -214,7 +216,7 @@ is.sexlinkage <- function (object) {
 #' print(object)
 #' }
 
-print.sexlinkage <- function (x, ..., system = c('xy', 'zw')) {
+print.sexlinkage <- function (x, ..., system = NULL) {
   
   # work out if any loci are sex-linked
   num_loci <- c(nrow(x$fem_het_male_hom),
@@ -308,92 +310,92 @@ print.sexlinkage <- function (x, ..., system = c('xy', 'zw')) {
 #' summary(object)
 #' }
 
-summary.sexlinkage <- function (object, ..., system = c('xy', 'zw')) {
+summary.sexlinkage <- function (object, ..., system = NULL) {
   
   # work out if any loci are sex-linked
-  num_loci <- c(nrow(x$fem_het_male_hom),
-                nrow(x$fem_hom_male_het),
-                nrow(x$fem_hom_male_absent),
-                nrow(x$fem_absent_male_hom))
+  num_loci <- c(nrow(object$fem_het_male_hom),
+                nrow(object$fem_hom_male_het),
+                nrow(object$fem_hom_male_absent),
+                nrow(object$fem_absent_male_hom))
   
   if (any(num_loci) > 0) {
     if (is.null(system) | !(system %in% c('xy', 'zw'))) {
-      if (nrow(x$fem_het_male_hom)) {    
-        cat(paste0('Identified ', nrow(x$fem_het_male_hom),
+      if (nrow(object$fem_het_male_hom)) {    
+        cat(paste0('Identified ', nrow(object$fem_het_male_hom),
                    ' loci with evidence of heterogametic something',
                    '\n'))
-        print(x$fem_het_male_hom)
+        print(object$fem_het_male_hom)
       }
-      if (nrow(x$fem_hom_male_het)) {    
-        cat(paste0('Identified ', nrow(x$fem_hom_male_het),
+      if (nrow(object$fem_hom_male_het)) {    
+        cat(paste0('Identified ', nrow(object$fem_hom_male_het),
                    ' loci with evidence of male hemizygosity',
                    '\n'))
-        print(x$fem_hom_male_het)
+        print(object$fem_hom_male_het)
       }
-      if (nrow(x$fem_hom_male_absent)) {    
-        cat(paste0('Identified ', nrow(x$fem_hom_male_absent),
+      if (nrow(object$fem_hom_male_absent)) {    
+        cat(paste0('Identified ', nrow(object$fem_hom_male_absent),
                    ' loci with evidence of male hemizygosity',
                    '\n'))
-        print(x$fem_hom_male_absent)
+        print(object$fem_hom_male_absent)
       }
-      if (nrow(x$fem_absent_male_hom)) {    
-        cat(paste0('Identified ', nrow(x$fem_absent_male_hom),
+      if (nrow(object$fem_absent_male_hom)) {    
+        cat(paste0('Identified ', nrow(object$fem_absent_male_hom),
                    ' loci with evidence of male hemizygosity',
                    '\n'))
-        print(x$fem_absent_male_hom)
+        print(object$fem_absent_male_hom)
       }
     }
     if (system %in% c('xy', 'zw')) {
       if (system == 'xy') { 
-        if (nrow(x$fem_het_male_hom)) {    
-          cat(paste0('Identified ', nrow(x$fem_het_male_hom),
+        if (nrow(object$fem_het_male_hom)) {    
+          cat(paste0('Identified ', nrow(object$fem_het_male_hom),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_het_male_hom)
+          print(object$fem_het_male_hom)
         }
-        if (nrow(x$fem_hom_male_het)) {    
-          cat(paste0('Identified ', nrow(x$fem_hom_male_het),
+        if (nrow(object$fem_hom_male_het)) {    
+          cat(paste0('Identified ', nrow(object$fem_hom_male_het),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_hom_male_het)
+          print(object$fem_hom_male_het)
         }
-        if (nrow(x$fem_hom_male_absent)) {    
-          cat(paste0('Identified ', nrow(x$fem_hom_male_absent),
+        if (nrow(object$fem_hom_male_absent)) {    
+          cat(paste0('Identified ', nrow(object$fem_hom_male_absent),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_hom_male_absent)
+          print(object$fem_hom_male_absent)
         }
-        if (nrow(x$fem_absent_male_hom)) {    
-          cat(paste0('Identified ', nrow(x$fem_absent_male_hom),
+        if (nrow(object$fem_absent_male_hom)) {    
+          cat(paste0('Identified ', nrow(object$fem_absent_male_hom),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_absent_male_hom)
+          print(object$fem_absent_male_hom)
         }
       }
       if (system == 'zw') {
-        if (nrow(x$fem_het_male_hom)) {    
-          cat(paste0('Identified ', nrow(x$fem_het_male_hom),
+        if (nrow(object$fem_het_male_hom)) {    
+          cat(paste0('Identified ', nrow(object$fem_het_male_hom),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_het_male_hom)
+          print(object$fem_het_male_hom)
         }
-        if (nrow(x$fem_hom_male_het)) {    
-          cat(paste0('Identified ', nrow(x$fem_hom_male_het),
+        if (nrow(object$fem_hom_male_het)) {    
+          cat(paste0('Identified ', nrow(object$fem_hom_male_het),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_hom_male_het)
+          print(object$fem_hom_male_het)
         }
-        if (nrow(x$fem_hom_male_absent)) {    
-          cat(paste0('Identified ', nrow(x$fem_hom_male_absent),
+        if (nrow(object$fem_hom_male_absent)) {    
+          cat(paste0('Identified ', nrow(object$fem_hom_male_absent),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_hom_male_absent)
+          print(object$fem_hom_male_absent)
         }
-        if (nrow(x$fem_absent_male_hom)) {    
-          cat(paste0('Identified ', nrow(x$fem_absent_male_hom),
+        if (nrow(object$fem_absent_male_hom)) {    
+          cat(paste0('Identified ', nrow(object$fem_absent_male_hom),
                      ' loci with evidence of male hemizygosity',
                      '\n'))
-          print(x$fem_absent_male_hom)
+          print(object$fem_absent_male_hom)
         }
       }
     }
