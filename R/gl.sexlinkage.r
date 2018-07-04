@@ -232,23 +232,23 @@ print.sexlinkage <- function (x, ..., system = NULL) {
   
   if (any(num_loci) > 0) {
     if (is.null(system)) {
-      if (nrow(object$fem_het_male_hom)) {    
-        cat(paste0('\nIdentified ', nrow(object$fem_het_male_hom),
+      if (nrow(x$fem_het_male_hom)) {    
+        cat(paste0('\nIdentified ', nrow(x$fem_het_male_hom),
                    ' which appear as homozygotes in males and heterozygotes in females',
                    '\n'))
       }
-      if (nrow(object$fem_hom_male_het)) {    
-        cat(paste0('\nIdentified ', nrow(object$fem_hom_male_het),
+      if (nrow(x$fem_hom_male_het)) {    
+        cat(paste0('\nIdentified ', nrow(x$fem_hom_male_het),
                    ' which appear as homozygotes in females and heterozygotes in males',
                    '\n'))
       }
-      if (nrow(object$fem_hom_male_absent)) {    
-        cat(paste0('\nIdentified ', nrow(object$fem_hom_male_absent),
+      if (nrow(x$fem_hom_male_absent)) {    
+        cat(paste0('\nIdentified ', nrow(x$fem_hom_male_absent),
                    ' loci consistent with W-linkage',
                    '\n'))
       }
-      if (nrow(object$fem_absent_male_hom)) {    
-        cat(paste0('\nIdentified ', nrow(object$fem_absent_male_hom),
+      if (nrow(x$fem_absent_male_hom)) {    
+        cat(paste0('\nIdentified ', nrow(x$fem_absent_male_hom),
                    ' loci consistent with Y-linkage',
                    '\n'))
       }
@@ -257,45 +257,45 @@ print.sexlinkage <- function (x, ..., system = NULL) {
         stop('system must be one of xy, zw, or NULL', call. = FALSE)
       }
       if (system == 'xy') { 
-        if (nrow(object$fem_het_male_hom)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_het_male_hom),
+        if (nrow(x$fem_het_male_hom)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_het_male_hom),
                      ' loci consistent with X-linkage',
                      '\n'))
         }
-        if (nrow(object$fem_hom_male_het)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_hom_male_het),
+        if (nrow(x$fem_hom_male_het)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_hom_male_het),
                      ' loci consistent with fixed differences between the sexes at XY homologs',
                      '\n'))
         }
-        if (nrow(object$fem_hom_male_absent)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_hom_male_absent),
+        if (nrow(x$fem_hom_male_absent)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_hom_male_absent),
                      ' loci consistent with W-linkage (likely an error given XY system)',
                      '\n'))
         }
-        if (nrow(object$fem_absent_male_hom)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_absent_male_hom),
+        if (nrow(x$fem_absent_male_hom)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_absent_male_hom),
                      ' loci consistent with Y-linkage',
                      '\n'))
         }
       }
       if (system == 'zw') {
-        if (nrow(object$fem_het_male_hom)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_het_male_hom),
+        if (nrow(x$fem_het_male_hom)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_het_male_hom),
                      ' loci consistent with fixed differences between the sexes at ZW homologs',
                      '\n'))
         }
-        if (nrow(object$fem_hom_male_het)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_hom_male_het),
+        if (nrow(x$fem_hom_male_het)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_hom_male_het),
                      ' loci consistent with Z-linkage',
                      '\n'))
         }
-        if (nrow(object$fem_hom_male_absent)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_hom_male_absent),
+        if (nrow(x$fem_hom_male_absent)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_hom_male_absent),
                      ' loci consistent with W-linkage',
                      '\n'))
         }
-        if (nrow(object$fem_absent_male_hom)) {    
-          cat(paste0('\nIdentified ', nrow(object$fem_absent_male_hom),
+        if (nrow(x$fem_absent_male_hom)) {    
+          cat(paste0('\nIdentified ', nrow(x$fem_absent_male_hom),
                      ' loci consistent with Y-linkage (likely an error given ZW system)',
                      '\n'))
         }
@@ -328,8 +328,8 @@ summary.sexlinkage <- function (object, ..., system = NULL,
                 nrow(object$fem_hom_male_absent),
                 nrow(object$fem_absent_male_hom))
   
-  cat(paste("Threshold proportion for heterozygotes in the homogametic sex: ", x$thresholds$het, "\n")) 
-  cat(paste("Threshold proportion for homozygotes in the heterogametic sex: ", x$thresholds$hom, "\n")) 
+  cat(paste("Threshold proportion for heterozygotes in the homogametic sex: ", object$thresholds$het, "\n")) 
+  cat(paste("Threshold proportion for homozygotes in the heterogametic sex: ", object$thresholds$hom, "\n")) 
   
   if (any(num_loci) > 0) {
     if (is.null(system)) {
