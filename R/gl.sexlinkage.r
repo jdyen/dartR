@@ -439,7 +439,7 @@ sexlinkage_print_helper <- function(x, include = c('locus', 'count', 'seq', 'met
     
   }
   
-  if ('seq' %in% include) {
+  if ('sequence' %in% include) {
     
     out <- cbind(out, x[, 'Trimmed_Sequence'])
     colnames(out)[(ncol(out))] <- c('Trimmed_Sequence')
