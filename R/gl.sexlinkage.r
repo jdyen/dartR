@@ -14,9 +14,9 @@
 #' as M for male, F for female, NA otherwise. The script abbreviates the entries here to the first character. So coding of "Female" and "Male" works as well. Character are also converted to upper cases.
 #'
 #' @param x -- name of the genlight object containing the SNP data
-#' @param t.het -- tolerance, that is \code{t.het = 0.05} means that 5% of individuals in the sex expected to be homozygous
+#' @param t.het -- tolerance, that is \code{t.het = 0.05} means that 5 percent of individuals in the sex expected to be homozygous
 #'   can be heterozygous and still be regarded as consistent with a sex specific marker (default 0)
-#' @param t.hom -- tolerance, that is \code{t.hom = 0.05} means that 5% of individuals in the sex expected to be heterozygous
+#' @param t.hom -- tolerance, that is \code{t.hom = 0.05} means that 5 percent of individuals in the sex expected to be heterozygous
 #'   can be homozygous and still be regarded as consistent with a sex specific marker (default 0)
 #' @param t.abs -- tolerance to errors when identifying absent individuals. \code{t.abs = 1} treats a single observation for
 #'   a given sex as an absence
