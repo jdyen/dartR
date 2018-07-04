@@ -436,7 +436,11 @@ sexlinkage_print_helper <- function(x, include = c('locus', 'count', 'seq', 'met
   
   if ('count' %in% include) {
     
-    out <- cbind(out, x[, seq_len(6)])
+    if (!is.null(out)) {
+      out <- cbind(out, x[, seq_len(6)])
+    } else {
+      out <- x[, seq_len(6)]
+    }
     colnames(out)[(ncol(out) - 5):(ncol(out))] <- c(colnames(x)[seq_len(6)])
     
   }
@@ -450,7 +454,11 @@ sexlinkage_print_helper <- function(x, include = c('locus', 'count', 'seq', 'met
   
   if ('metrics' %in% include) {
     
-    out <- cbind(out, x[, c('AvgCountRef', 'AvgCountSnp')])
+    if (!is.null(out)) {
+      out <- cbind(out, x[, c('AvgCountRef', 'AvgCountSnp')])
+    } else {
+      out <- x[, c('AvgCountRef', 'AvgCountSnp')]
+    }
     colnames(out)[(ncol(out)):(ncol(out) - 1)] <- c('AvgCountRef', 'AvgCountSnp')
     
   }
