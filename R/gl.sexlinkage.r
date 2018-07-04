@@ -435,7 +435,7 @@ sexlinkage_print_helper <- function(x, include = c('locus', 'count', 'seq', 'met
   if ('count' %in% include) {
     
     out <- cbind(out, x[, seq_len(6)])
-    colnames(out)[(ncol(out)):(ncol(out) - 5)] <- c(colnames(x)[seq_len(6)])
+    colnames(out)[(ncol(out) - 5):(ncol(out))] <- c(colnames(x)[seq_len(6)])
     
   }
   
